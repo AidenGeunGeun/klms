@@ -2,7 +2,7 @@
 name = "klms"
 version = "0.3.0"
 edition = "2024"
-rust-version = "1.86"
+rust-version = "1.89"
 description = "A fast, composable CLI for KAIST's Learning Management System"
 license = "MIT"
 repository = "https://github.com/alazarteka/klms"
@@ -23,7 +23,7 @@ ureq = { version = "=3.4.2", default-features = false, features = ["rustls-no-pr
 url = "=2.5.8"
 rustls = { version = "=0.23.46", default-features = false, features = ["ring", "std", "tls12"] }
 rpassword = "=7.5.4"
-rusqlite = { version = "=0.40.2", default-features = false, features = ["bundled"] }
+rusqlite = { version = "=0.41.1", default-features = false, features = ["bundled"] }
 scraper = "=0.23.1"
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = "=1.0.151"

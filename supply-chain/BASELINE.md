@@ -74,3 +74,19 @@ holds the Cargo registry and `target/`, minus cargo-deny's advisory
 database, and `release.yml` stays uncached so published binaries always come
 from a clean build. Reviewer:
 `@alazarteka` (prepared by Claude Code).
+
+## 2026-11-20 security maintenance
+
+Resolved the two remaining `cargo-deny` advisories via delta audits rather than
+new exemptions:
+
+- `rusqlite` `0.40.2 -> 0.41.1` and `libsqlite3-sys` `0.38.2 -> 0.39.1`: fixes
+  `RUSTSEC-2026-0459` / `CVE-2026-119375` (bundled SQLite updated to 3.54.1).
+  `rusqlite` 0.41 requires Rust 1.89, so `rust-toolchain.toml`, `Cargo.toml`,
+  `README.md`, and CI/release workflows moved from Rust 1.86.0 to 1.89.0.
+- `rustls-webpki` `0.103.14 -> 0.103.16`: fixes `RUSTSEC-2026-0382` (rejects
+  distrusted emSign intermediates). The `0.103.14` exemption stays in
+  `supply-chain/config.toml` only as the anchor for the `0.103.14 -> 0.103.16`
+  delta audit.
+
+Reviewer: pending `@alazarteka`.

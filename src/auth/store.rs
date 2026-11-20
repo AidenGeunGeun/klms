@@ -185,10 +185,9 @@ pub fn remove_temporaries(path: &Path, what: &str, warnings: &mut Vec<String>) {
             .strip_prefix(&prefix)
             .and_then(|name| name.strip_suffix(".tmp"))
             .is_some_and(|pid| !pid.is_empty() && pid.bytes().all(|b| b.is_ascii_digit()))
+            && let Err(error) = remove_file(&entry.path(), what)
         {
-            if let Err(error) = remove_file(&entry.path(), what) {
-                warnings.push(error.message);
-            }
+            warnings.push(error.message);
         }
     }
 }

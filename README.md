@@ -19,7 +19,7 @@ bash install-klms.sh
 ```
 
 The script verifies the archive's SHA-256 and installs `klms` into `~/.local/bin`
-(set `KLMS_INSTALL_DIR` to change it). From source, with Rust 1.86 or newer:
+(set `KLMS_INSTALL_DIR` to change it). From source, with Rust 1.89 or newer:
 `make build`, then `target/release/klms __install --destination ~/.local/bin/klms`.
 
 ## Sign in

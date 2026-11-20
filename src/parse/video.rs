@@ -152,15 +152,14 @@ pub fn embedded_launch(
         let script = script.text().collect::<String>();
         for quote in ['\"', '\''] {
             for literal in script.split(quote).skip(1).step_by(2) {
-                if literal.len() < 2048 && !literal.contains(['\\', '\n', '\r']) {
-                    if let Some(u) = resolve_http_url(base, literal) {
-                        if u.origin() == base.origin()
-                            && u.path() == "/mod/lti/launch.php"
-                            && query_value(&u, "id") == query_value(base, "id")
-                        {
-                            return Ok(Some(u));
-                        }
-                    }
+                if literal.len() < 2048
+                    && !literal.contains(['\\', '\n', '\r'])
+                    && let Some(u) = resolve_http_url(base, literal)
+                    && u.origin() == base.origin()
+                    && u.path() == "/mod/lti/launch.php"
+                    && query_value(&u, "id") == query_value(base, "id")
+                {
+                    return Ok(Some(u));
                 }
             }
         }
