@@ -95,10 +95,10 @@ fn publish_new_with<T, E>(
 ) -> Result<(T, Linked), PublishError<E>> {
     let (mut file, temporary) = create_exclusive(temporary)?;
     let temporary = temporary.as_path();
-    if matches!(mode, Publication::Download) {
-        if let Ok(own) = file.metadata() {
-            sweep_stale(out_parent(destination), &own);
-        }
+    if matches!(mode, Publication::Download)
+        && let Ok(own) = file.metadata()
+    {
+        sweep_stale(out_parent(destination), &own);
     }
     let value = match fill(&mut file) {
         Ok(value) => value,

@@ -249,15 +249,15 @@ impl Run<'_> {
                 Some(details),
             )?;
         }
-        if let (Some(e), Some(after)) = (&existing, desired) {
-            if e.state != after {
-                let kind = match (e.state.as_str(), after) {
-                    (_, "access_lost") => "access_lost",
-                    ("access_lost", "present") => "access_restored",
-                    _ => "resource_restored",
-                };
-                self.change(kind, &resource.reference, None, None, None)?;
-            }
+        if let (Some(e), Some(after)) = (&existing, desired)
+            && e.state != after
+        {
+            let kind = match (e.state.as_str(), after) {
+                (_, "access_lost") => "access_lost",
+                ("access_lost", "present") => "access_restored",
+                _ => "resource_restored",
+            };
+            self.change(kind, &resource.reference, None, None, None)?;
         }
         Ok(id)
     }

@@ -411,11 +411,10 @@ fn remember_login(
                 let stale = identity
                     .password_backend
                     .take_if(|kind| kind.as_str() != backend.kind());
-                if let Some(kind) = stale {
-                    if let Err(error) = env.secrets.open(&kind).and_then(|old| old.clear(&username))
-                    {
-                        warnings.push(format!("could not remove the previous password from the {kind} backend: {}; retry `klms auth forget` when it is available", error.message));
-                    }
+                if let Some(kind) = stale
+                    && let Err(error) = env.secrets.open(&kind).and_then(|old| old.clear(&username))
+                {
+                    warnings.push(format!("could not remove the previous password from the {kind} backend: {}; retry `klms auth forget` when it is available", error.message));
                 }
                 identity.password_backend = Some(backend.kind().to_owned());
                 stored_now = true;

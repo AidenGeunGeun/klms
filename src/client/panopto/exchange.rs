@@ -32,21 +32,20 @@ impl http::Policy for Policy {
         let mut h = Vec::new();
         if self.config.is_panopto(u) {
             if let Some(c) = self.jar.header(u) {
-                if self.delivery_only {
-                    if let Some(token) = c
+                if self.delivery_only
+                    && let Some(token) = c
                         .split(';')
                         .filter_map(|p| p.trim().split_once('='))
                         .find_map(|(name, value)| (name == "csrfToken").then_some(value))
-                    {
-                        h.push(("x-csrf-token", token.to_owned()));
-                    }
+                {
+                    h.push(("x-csrf-token", token.to_owned()));
                 }
                 h.push(("cookie", c))
             }
-            if self.delivery_only {
-                if let Some(t) = &self.bearer {
-                    h.push(("authorization", format!("Bearer {t}")))
-                }
+            if self.delivery_only
+                && let Some(t) = &self.bearer
+            {
+                h.push(("authorization", format!("Bearer {t}")))
             }
         }
         h

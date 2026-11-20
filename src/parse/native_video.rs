@@ -139,10 +139,9 @@ pub fn native_sources(html: &str, page: &Url) -> Result<Vec<Url>, AppError> {
                             if matches!(t[0], Token::Word(w) | Token::String(w) if w == key)
                                 && *t[1] == Token::Punct(':')
                                 && matches!(t[3], Token::Punct(',') | Token::Punct('}'))
+                                && let Token::String(value) = t[2]
                             {
-                                if let Token::String(value) = t[2] {
-                                    return Some(value.as_str());
-                                }
+                                return Some(value.as_str());
                             }
                             None
                         })
