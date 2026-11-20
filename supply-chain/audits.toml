@@ -94,6 +94,12 @@ who = "Codex agent (task 01a05f8d-b5ae-70d0-bdf9-6598dca0ff11)"
 criteria = "safe-to-run"
 version = "0.38.2"
 
+[[audits.libsqlite3-sys]]
+who = "Devin (session devin-3954636ec48740b686466609a3ba1214)"
+criteria = "safe-to-run"
+delta = "0.38.2 -> 0.39.1"
+notes = "Reviewed build.rs and crate delta for RUSTSEC-2026-0459 (CVE-2026-119375). Updates bundled SQLite amalgamation to 3.54.1 and checked-in bindgen bindings; bundled non-sqlcipher build path still compiles local sqlite3.c via cc with no downloads or writes outside OUT_DIR. See BASELINE.md, 2026-11-20 security maintenance."
+
 [[audits.pkg-config]]
 who = "Codex agent (task 01a05f8d-b5ae-70d0-bdf9-6598dca0ff11)"
 criteria = "safe-to-run"
@@ -113,6 +119,24 @@ version = "0.0.6"
 who = "Codex agent (task 01a05f8d-b5ae-70d0-bdf9-6598dca0ff11)"
 criteria = "safe-to-run"
 version = "0.40.2"
+
+[[audits.rusqlite]]
+who = "Devin (session devin-3954636ec48740b686466609a3ba1214)"
+criteria = "safe-to-run"
+delta = "0.40.2 -> 0.41.1"
+notes = "Reviewed crate delta for libsqlite3-sys 0.39.1 (RUSTSEC-2026-0459). No build script; no new network, process, or ambient filesystem side effects in library code (only caller-directed SQLite FFI and Rust 2024 edition unsafe-block updates). See BASELINE.md, 2026-11-20 security maintenance."
+
+[[audits.rustls]]
+who = "Devin (session devin-3954636ec48740b686466609a3ba1214)"
+criteria = "safe-to-run"
+delta = "0.23.45 -> 0.23.46"
+notes = "Reviewed crate delta for RUSTSEC-2026-0346, RUSTSEC-2026-0347, RUSTSEC-2026-0348, and RUSTSEC-2026-0349. build.rs unchanged; library changes are confined to in-memory TLS handshake, key-schedule, ECH, brotli window limit, and Debug redaction fixes with no new filesystem, process, or network side effects. See BASELINE.md, 2026-11-20 security maintenance."
+
+[[audits.rustls-webpki]]
+who = "Devin (session devin-3954636ec48740b686466609a3ba1214)"
+criteria = "safe-to-run"
+delta = "0.103.14 -> 0.103.16"
+notes = "Reviewed crate delta for RUSTSEC-2026-0382. No build script; adds distrusted emSign intermediate public key rejection data and certificate verification checks with no filesystem, process, or network side effects. See BASELINE.md, 2026-11-20 security maintenance."
 
 [[audits.sha2]]
 who = "Codex agent (task 01a05f8d-b5ae-70d0-bdf9-6598dca0ff11)"

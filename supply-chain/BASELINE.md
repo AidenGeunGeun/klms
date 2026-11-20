@@ -172,3 +172,23 @@ notes, but it was not independently resolved against the release repository
 here. The uv version (0.12.10) and Python version are unchanged, no Rust
 dependencies or cargo-vet exemptions change, and the action remains pinned to a
 full commit SHA. Reviewer: pending `@alazarteka` (prepared by Claude Code).
+
+## 2026-11-20 security maintenance (rusqlite, rustls, rustls-webpki)
+
+Reviewer: Devin (session `devin-3954636ec48740b686466609a3ba1214`), pending `@AidenGeunGeun` PR review.
+
+`cargo-deny` reported six advisories on `main`: `RUSTSEC-2026-0459` (CVE-2026-119375)
+on `libsqlite3-sys` 0.38.2, `RUSTSEC-2026-0346` through `RUSTSEC-2026-0349` on
+`rustls` 0.23.45, and `RUSTSEC-2026-0382` on `rustls-webpki` 0.103.14.
+
+- `rusqlite` advances `0.40.2 -> 0.41.1` and `libsqlite3-sys` advances
+  `0.38.2 -> 0.39.1` (bundling SQLite 3.54.1). Because `rusqlite` 0.41 declares
+  MSRV 1.89, the pinned Rust toolchain advances from `1.86.0` to `1.89.0`
+  (`dtolnay/rust-toolchain` commit `d92bbbb03544f480ed5c7ba4b54020e4ed2c4f65`).
+- `rustls` advances `0.23.45 -> 0.23.46` and `rustls-webpki` advances
+  `0.103.14 -> 0.103.16`.
+- No other crates change in `Cargo.lock` and no exemptions are added or bumped.
+  All four crate deltas were inspected for `safe-to-run` side effects and
+  recorded as delta audits in `supply-chain/audits.toml`. This is a side-effect
+  safety review of the deltas, not a full correctness or memory-safety audit of
+  SQLite, `rusqlite`, `rustls`, or `rustls-webpki`.

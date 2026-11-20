@@ -171,7 +171,7 @@ under `~/.local/share/klms/skills/klms` and links it from
 
 ## Build from source
 
-This project uses Rust 1.86 or newer. Dependency changes have an additional
+This project uses Rust 1.89 or newer. Dependency changes have an additional
 review gate; read [SECURITY.md](SECURITY.md) and
 [docs/DEPENDENCY_UPDATES.md](docs/DEPENDENCY_UPDATES.md) before editing
 `Cargo.toml` or `Cargo.lock`.
