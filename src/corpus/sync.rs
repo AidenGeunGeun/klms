@@ -450,35 +450,33 @@ fn collect_course(
                 activity.kind.as_str(),
                 "assign" | "quiz" | "page" | "folder" | "resource" | "coursefile"
             );
-        if detail_wanted {
-            if let Some(url) = &activity.url {
-                match client.get(url).and_then(|response| {
-                    parse::resource_detail(&response.text, base_url, &response.url, &activity.kind)
-                }) {
-                    Ok(detail) => {
-                        row.complete = !detail.text_truncated && !detail.links_truncated;
-                        row.representations_complete = !detail.links_truncated;
-                        row.text = Some(detail.text.clone());
-                        row.links = detail.links.clone();
-                        row.source = json!({"activity": activity, "detail": detail});
-                    }
-                    Err(error) => {
-                        row.observe = false;
-                        row.complete = false;
-                        row.source["detail"]["state"] = json!("incomplete");
-                        row.access_lost = error.code == "PERMISSION_DENIED";
-                        failures.push(format!("{reference}: {}", error.message));
-                    }
+        if detail_wanted && let Some(url) = &activity.url {
+            match client.get(url).and_then(|response| {
+                parse::resource_detail(&response.text, base_url, &response.url, &activity.kind)
+            }) {
+                Ok(detail) => {
+                    row.complete = !detail.text_truncated && !detail.links_truncated;
+                    row.representations_complete = !detail.links_truncated;
+                    row.text = Some(detail.text.clone());
+                    row.links = detail.links.clone();
+                    row.source = json!({"activity": activity, "detail": detail});
+                }
+                Err(error) => {
+                    row.observe = false;
+                    row.complete = false;
+                    row.source["detail"]["state"] = json!("incomplete");
+                    row.access_lost = error.code == "PERMISSION_DENIED";
+                    failures.push(format!("{reference}: {}", error.message));
                 }
             }
         }
-        if options.notices && activity.kind == "courseboard" {
-            if let Some(url) = &activity.url {
-                let (mut notices, mut notice_failures) =
-                    collect_board(client, base_url, &course, url);
-                rows.append(&mut notices);
-                failures.append(&mut notice_failures);
-            }
+        if options.notices
+            && activity.kind == "courseboard"
+            && let Some(url) = &activity.url
+        {
+            let (mut notices, mut notice_failures) = collect_board(client, base_url, &course, url);
+            rows.append(&mut notices);
+            failures.append(&mut notice_failures);
         }
         rows.push(row);
     }
@@ -744,24 +742,24 @@ fn upsert_resource(
             json!({"kind": resource.kind}),
         )?;
     }
-    if let (Some(before), Some(after)) = (previous_state.as_deref(), desired) {
-        if before != after {
-            let kind = match (before, after) {
-                ("not_observed", "present") => "resource_restored",
-                (_, "access_lost") => "access_lost",
-                ("access_lost", "present") => "access_restored",
-                _ => "resource_restored",
-            };
-            change(
-                transaction,
-                (run_id, at),
-                kind,
-                &resource.reference,
-                None,
-                None,
-                json!({}),
-            )?;
-        }
+    if let (Some(before), Some(after)) = (previous_state.as_deref(), desired)
+        && before != after
+    {
+        let kind = match (before, after) {
+            ("not_observed", "present") => "resource_restored",
+            (_, "access_lost") => "access_lost",
+            ("access_lost", "present") => "access_restored",
+            _ => "resource_restored",
+        };
+        change(
+            transaction,
+            (run_id, at),
+            kind,
+            &resource.reference,
+            None,
+            None,
+            json!({}),
+        )?;
     }
     Ok(id)
 }

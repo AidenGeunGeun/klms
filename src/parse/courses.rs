@@ -240,12 +240,12 @@ fn professors(document: &Html) -> Result<Vec<String>, AppError> {
 }
 
 fn course_code(title: &str) -> Option<String> {
-    if let Some(start) = title.rfind('(').map(|index| index + 1) {
-        if let Some(relative_end) = title[start..].find(')') {
-            let value = title[start..start + relative_end].trim();
-            if value.contains('_') && value.chars().any(|c| c.is_ascii_digit()) {
-                return Some(value.to_owned());
-            }
+    if let Some(start) = title.rfind('(').map(|index| index + 1)
+        && let Some(relative_end) = title[start..].find(')')
+    {
+        let value = title[start..start + relative_end].trim();
+        if value.contains('_') && value.chars().any(|c| c.is_ascii_digit()) {
+            return Some(value.to_owned());
         }
     }
     title

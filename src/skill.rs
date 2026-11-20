@@ -132,13 +132,13 @@ fn ensure_directory(path: &Path) -> Result<(), AppError> {
 }
 
 fn write_atomic(path: &Path, contents: &[u8]) -> Result<(), AppError> {
-    if let Ok(metadata) = fs::symlink_metadata(path) {
-        if !metadata.is_file() {
-            return Err(AppError::config(format!(
-                "refusing to replace unexpected path {}",
-                display(path)
-            )));
-        }
+    if let Ok(metadata) = fs::symlink_metadata(path)
+        && !metadata.is_file()
+    {
+        return Err(AppError::config(format!(
+            "refusing to replace unexpected path {}",
+            display(path)
+        )));
     }
     let temporary = path.with_extension(format!("tmp-{}", process::id()));
     let mut file = fs::OpenOptions::new()
@@ -264,13 +264,13 @@ fn preflight(paths: &Paths) -> Result<(), AppError> {
                 Err(error) => return Err(io_error("inspect", ancestor, error)),
             }
         }
-        if let Ok(metadata) = fs::symlink_metadata(directory) {
-            if metadata.file_type().is_symlink() {
-                return Err(AppError::config(format!(
-                    "refusing unexpected symlink {}",
-                    display(directory)
-                )));
-            }
+        if let Ok(metadata) = fs::symlink_metadata(directory)
+            && metadata.file_type().is_symlink()
+        {
+            return Err(AppError::config(format!(
+                "refusing unexpected symlink {}",
+                display(directory)
+            )));
         }
     }
     match fs::symlink_metadata(&paths.payload_file) {

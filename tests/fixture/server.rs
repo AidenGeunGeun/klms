@@ -214,12 +214,11 @@ fn read_headers(stream: &mut TcpStream) -> io::Result<Option<Vec<u8>>> {
 impl Drop for Server {
     fn drop(&mut self) {
         self.stopped.store(true, Ordering::Relaxed);
-        if let Some(thread) = self.thread.take() {
-            if let Err(error) = thread.join() {
-                if !thread::panicking() {
-                    std::panic::resume_unwind(error);
-                }
-            }
+        if let Some(thread) = self.thread.take()
+            && let Err(error) = thread.join()
+            && !thread::panicking()
+        {
+            std::panic::resume_unwind(error);
         }
     }
 }
